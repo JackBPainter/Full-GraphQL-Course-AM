@@ -38,7 +38,7 @@ const createPostForUser = async (authorID, data) => {
 //     published: true
 // }).then(user => {
 //     console.log(JSON.stringify(user, undefined, 2))
-// }).catch(error => console.log(error))
+// }).catch(error => console.log(error.message))
 
 const updateUserPost = async (postID, data) => {
     const postExists = await prisma.exists.Post({
@@ -63,4 +63,4 @@ updateUserPost('12', {
     published: false
 }).then(data => {
     console.log(JSON.stringify(data, undefined, 2))
-}).catch(error => console.log(error))
+}).catch(error => console.log(error.message))
