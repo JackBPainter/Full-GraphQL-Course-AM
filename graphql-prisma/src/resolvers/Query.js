@@ -1,22 +1,26 @@
-const Query = {
-    users(parent, args, { db }, info) {
-        if (!args.query) {
-            return db.users
-        }
+import prisma from "../prisma"
 
-        return db.users.filter((user) => {
-            return user.name.toLowerCase().includes(args.query.toLowerCase())
-        })
+const Query = {
+    users(parent, args, { db, prisma }, info) {
+        return prisma.query.users(null, info)
+        // if (!args.query) {
+        //     return db.users
+        // }
+
+        // return db.users.filter((user) => {
+        //     return user.name.toLowerCase().includes(args.query.toLowerCase())
+        // })
     },
     posts(parent, args, { db }, info) {
-        if (!args.query) {
-            return db.posts
-        }
+        return prisma.query.posts(null, info)
+        // if (!args.query) {
+        //     return db.posts
+        // }
 
-        return db.posts.filter((post) => {
-            return post.body.toLowerCase().includes(args.query.toLowerCase()) || 
-                post.title.toLowerCase().includes(args.query.toLowerCase())
-        })
+        // return db.posts.filter((post) => {
+        //     return post.body.toLowerCase().includes(args.query.toLowerCase()) || 
+        //         post.title.toLowerCase().includes(args.query.toLowerCase())
+        // })
     },
     me() {
         return {
