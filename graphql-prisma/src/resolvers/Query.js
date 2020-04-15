@@ -1,7 +1,7 @@
 import prisma from "../prisma"
 
 const Query = {
-    users(parent, args, { db, prisma }, info) {
+    users(parent, args, { prisma }, info) {
         const opArgs = {}
 
         if(args.query) {
@@ -16,7 +16,7 @@ const Query = {
 
         return prisma.query.users(opArgs, info)
     },
-    posts(parent, args, { db, prisma }, info) {
+    posts(parent, args, { prisma }, info) {
         const opArgs = {}
 
         if(args.query) {
@@ -47,8 +47,8 @@ const Query = {
             published: true
         }
     },
-    comments(parent, args, { db }, info) {
-        return db.comments
+    comments(parent, args, { prisma }, info) {
+        return prisma.query.comments(null, info)
     }
 }
 
