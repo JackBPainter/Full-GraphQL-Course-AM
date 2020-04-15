@@ -2,25 +2,34 @@ import prisma from "../prisma"
 
 const Query = {
     users(parent, args, { db, prisma }, info) {
-        return prisma.query.users(null, info)
-        // if (!args.query) {
-        //     return db.users
-        // }
+        const opArgs = {}
 
-        // return db.users.filter((user) => {
-        //     return user.name.toLowerCase().includes(args.query.toLowerCase())
-        // })
+        if(args.query) {
+            opArgs.where = {
+                OR: [{
+                    name_contains: args.query
+                }, {
+                    email_contains: args.query
+                }]
+            }
+        }
+
+        return prisma.query.users(opArgs, info)
     },
-    posts(parent, args, { db }, info) {
-        return prisma.query.posts(null, info)
-        // if (!args.query) {
-        //     return db.posts
-        // }
+    posts(parent, args, { db, prisma }, info) {
+        const opArgs = {}
 
-        // return db.posts.filter((post) => {
-        //     return post.body.toLowerCase().includes(args.query.toLowerCase()) || 
-        //         post.title.toLowerCase().includes(args.query.toLowerCase())
-        // })
+        if(args.query) {
+            opArgs.where = {
+                OR: [{
+                    title_contains: args.query
+                }, {
+                    body_contains: args.query
+                }]
+            }
+        }
+
+        return prisma.query.posts(opArgs, info)
     },
     me() {
         return {
