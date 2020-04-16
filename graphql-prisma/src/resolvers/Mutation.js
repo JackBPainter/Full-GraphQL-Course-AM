@@ -41,81 +41,13 @@ const Mutation = {
             }
         }, info)
     },
-    updatePost(parent, { id, data }, { db, pubsub }, info) {
-        const post = db.posts.find(post => post.id === id)
-        const originalPost = { ...post }
-
-        if(!post) {
-            throw new Error('Post not found')
-        }
-
-        if(typeof data.title === 'string') {
-            post.title = data.title
-        }
-
-        if(typeof data.body === 'string') {
-            post.body = data.body
-        }
-    
-        if(typeof data.published === 'boolean') {
-            post.published = data.published
-
-            if(originalPost.published && !post.published) {
-                // deleted
-                pubsub.publish('post', {
-                    post: {
-                        mutation: 'DELETED',
-                        data: originalPost
-                    }
-                })
-            } else if(!originalPost.published && post.published) {
-                // created
-                pubsub.publish('post', {
-                    post: {
-                        mutation: 'CREATED',
-                        data: post
-                    }
-                })
-            }
-        } else if(post.published) {
-            // update
-            pubsub.publish('post', {
-                post: {
-                    mutation: 'UPDATED',
-                    data: post
-                }
-            })
-        }
-
-        return post 
-    },
-    createComment(parent, args, { db, pubsub }, info) {
-        const userExists = db.users.some(user => user.id === args.data.author)
-        const postExists = db.posts.some(post => post.id === args.data.post && post.published)
-
-        if(!userExists) {
-            throw new Error('User not found')
-        }
-
-        if(!postExists) {
-            throw new Error('Post not found')
-        }
-
-        const comment = {
-            id: uuidv4(),
-            ...args.data
-        }
-        
-        db.comments.push(comment)
-
-        pubsub.publish(`comment ${args.data.post}`, { 
-            comment: {
-                mutation: "CREATED",
-                data: comment
-            }
-        })
-
-        return comment
+    updatePost(parent, { id, data }, { prisma }, info) {
+        return prisma.mutation.updatePost({
+            where: {
+                id: id
+            },
+            data: data
+        }, info)
     },
     deleteComment(parent, args, { db, pubsub }, info) {
         const commentIndex = db.comments.findIndex(comment => comment.id === args.id)
