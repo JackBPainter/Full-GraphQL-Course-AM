@@ -14,12 +14,35 @@ const Mutation = {
                 ...args.data,
                 password
             }
-        })
+        }) // Not including info as a second argument here means we only get the scaler types back
 
         return {
             user,
             token: jwt.sign({ userId: user.id }, 'thisisasecret')
         }
+    },
+    async login(parent, { data }, { prisma }, info) {
+        const user = await prisma.query.user({
+            where: {
+                email: data.email
+            }
+        })
+        
+        if(!user) {
+            throw new Error("Unable to login")
+        }
+
+        const isMatch = await bcrypt.compare(data.password, user.password)
+
+        if(!isMatch) {
+            throw new Error('Unable to login')
+        }
+
+        return {
+            user,
+            token: jwt.sign({ userId: user.id }, 'thisisasecret')
+        }
+
     },
     deleteUser(parent, args, { prisma }, info) {
         return prisma.mutation.deleteUser({
