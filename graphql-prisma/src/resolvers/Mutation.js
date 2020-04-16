@@ -44,9 +44,26 @@ const Mutation = {
     updatePost(parent, { id, data }, { prisma }, info) {
         return prisma.mutation.updatePost({
             where: {
-                id: id
+                id
             },
-            data: data
+            data
+        }, info)
+    },
+    createComment(parent, { data }, { prisma }, info) {
+        return prisma.mutation.createComment({
+            data: {
+                text: data.text,
+                author: {
+                    connect: {
+                        id: data.author
+                    }
+                },
+                post: {
+                    connect: {
+                        id: data.post
+                    }
+                }
+            }
         }, info)
     },
     deleteComment(parent, args, { db, pubsub }, info) {
