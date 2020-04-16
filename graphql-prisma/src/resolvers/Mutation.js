@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4'
+import prisma from '../prisma'
 
 const Mutation = {
     createUser(parent, args, { prisma }, info) {
@@ -20,7 +21,7 @@ const Mutation = {
         }, info)
     },
     createPost(parent, args, { prisma }, info) {
-        return prisma.mutation.createPost({ 
+        return prisma.mutation.createPost({
             data: {
                 title: args.data.title,
                 body: args.data.body,
@@ -33,27 +34,12 @@ const Mutation = {
             }
         }, info)
     },
-    deletePost(parent, args, { db, pubsub }, info) {
-        const postIndex = db.posts.findIndex(post => post.id === args.id)
-
-        if (postIndex === -1) {
-            throw new Error('Post not found')
-        }
-
-        const [deletedPost] = db.posts.splice(postIndex, 1)
-
-        db.comments = db.comments.filter(comment => comment.post !== args.id)
-
-        if(deletedPost.published) {
-            pubsub.publish('post', {
-                post: {
-                    mutation: 'DELETED',
-                    data: deletedPost
-                }
-            })
-        }
-
-        return deletedPost
+    deletePost(parent, args, { prisma }, info) {
+        return prisma.mutation.deletePost({
+            where: {
+                id: args.id
+            }
+        }, info)
     },
     updatePost(parent, { id, data }, { db, pubsub }, info) {
         const post = db.posts.find(post => post.id === id)
