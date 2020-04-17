@@ -1,4 +1,3 @@
-import prisma from "../prisma"
 import getUserId from "../utils/getUserId"
 
 const Query = {
