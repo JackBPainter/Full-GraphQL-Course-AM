@@ -5,7 +5,8 @@ const Query = {
         const opArgs = {
             first: args.first,
             skip: args.skip,
-            after: args.after
+            after: args.after,
+            orderBy: args.orderBy
         }
 
         if(args.query) {
@@ -18,7 +19,7 @@ const Query = {
 
         return prisma.query.users(opArgs, info)
     },
-    myPosts(parent, { query, first, skip, after }, { prisma, request }, info) {
+    myPosts(parent, { query, first, skip, after, orderBy }, { prisma, request }, info) {
         const userId = getUserId(request)
 
         const opArgs = {
@@ -29,7 +30,8 @@ const Query = {
             },
             first,
             skip,
-            after
+            after,
+            orderBy
         }
 
         if(query) {
@@ -49,7 +51,8 @@ const Query = {
             },
             first: args.first,
             skip: args.skip,
-            after: args.after
+            after: args.after,
+            orderBy: args.orderBy
         }
 
         if(args.query) {
@@ -98,7 +101,8 @@ const Query = {
         const opArgs = {
             first: args.first,
             skip: args.skip,
-            after: args.after
+            after: args.after,
+            orderBy: args.orderBy
         }
 
         return prisma.query.comments(opArgs, info)
