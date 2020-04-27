@@ -1,40 +1,43 @@
 {
   "name": "graphql-basics",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "env-cmd -f ./config/test.env jest --watch",
     "dev": "env-cmd -f ./config/development.env nodemon src/index.js --ext js,graphql --exec babel-node",
     "start": "node dist/index.js",
     "heroku-postbuild": "babel src --out-dir dist --copy-files",
     "get-schema": "graphql get-schema -p prisma --dotenv config/development.env"
   },
+  "jest": {
+    "globalSetup": "./tests/jest/globalSetup.js",
+    "globalTeardown": "./tests/jest/globalTeardown.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/polyfill": "^7.8.7",
-    "@babel/preset-env": "^7.0.0",
-    "@playlyfe/gql": "^2.6.2",
-    "bcrypt": "^4.0.1",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "babel-node": "^0.0.1-security",
     "bcryptjs": "^2.4.3",
-    "env-cmd": "^10.1.0",
+    "core-js": "^3.6.4",
     "graphql-cli": "^3.0.14",
-    "graphql-yoga": "^1.18.3",
     "jsonwebtoken": "^8.5.1",
     "prisma-binding": "^2.3.16",
-    "uuid": "^7.0.3"
+    "env-cmd": "^10.1.0",
+    "graphql-yoga": "^1.18.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/node": "^7.0.0",
-    "@babel/preset-env": "^7.9.5",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.4.2",
     "jest": "^25.4.0",
     "nodemon": "^2.0.2"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "description": ""
 }
